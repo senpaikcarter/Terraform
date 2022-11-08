@@ -71,10 +71,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "reginald" {
 
     ip_configuration {
       name      = "internal"
-      primary   = trueoutput "VMSS-IP" {
-#   description = "this is the output for the IP address"
-#   value = azurerm_linux_virtual_machine_scale_set.reginald.ip
-# }
+      primary   = true
       subnet_id = azurerm_subnet.sub_sandwich.id
     }
   }
