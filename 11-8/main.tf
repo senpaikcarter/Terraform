@@ -23,13 +23,13 @@ locals {
 
 resource "azurerm_resource_group" "Contaynement" {
   name     = "Contaynement"
-  location = locals.location
+  location = local.location
 }
 
 resource "azurerm_virtual_network" "darknet" {
   name                = "example-network"
   resource_group_name = azurerm_resource_group.Contaynement.name
-  location            = locals.location
+  location            = local.location
   address_space       = ["10.0.0.0/16"]
 }
 
