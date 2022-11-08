@@ -43,7 +43,7 @@ resource "azurerm_subnet" "sub_sandwich" {
 resource "azurerm_linux_virtual_machine_scale_set" "stretch_armstrong" {
   name                = "stretch_armstrong"
   resource_group_name = azurerm_resource_group.Contaynement.name
-  location            = locals.location
+  location            = local.location
   sku                 = "Standard_B2s"
   instances           = 1
   admin_username      = "adminuser"
