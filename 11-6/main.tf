@@ -1,34 +1,48 @@
+terraform {
+  required_providers {
+    azurerm = {
+      source = "hashicorp/azurerm"
+      version = "3.30.0"
+    }
+  }
+}
+
+provider "azurerm" {
+  # Configuration options
+}
+
 locals {
-  first_public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC+wWK73dCr+jgQOAxNsHAnNNNMEMWOHYEccp6wJm2gotpr9katuF/ZAdou5AaW1C61slRkHRkpRRX9FA9CYBiitZgvCCz+3nWNN7l/Up54Zps/pHWGZLHNJZRYyAB6j5yVLMVHIHriY49d/GZTZVNB8GoJv9Gakwc/fuEZYYl4YDFiGMBP///TzlI4jhiJzjKnEvqPFki5p2ZRJqcbCiF4pJrxUQR/RXqVFQdbRLZgYfJ8xGB878RENq3yQ39d8dVOkq4edbkzwcUmwwwkYVPIoDGsYLaRHnG+To7FvMeyO7xDVQkMKzopTQV8AuKpyvpqu0a9pWOMaiCyDytO7GGN you@me.com"
+  #first_public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC+wWK73dCr+jgQOAxNsHAnNNNMEMWOHYEccp6wJm2gotpr9katuF/ZAdou5AaW1C61slRkHRkpRRX9FA9CYBiitZgvCCz+3nWNN7l/Up54Zps/pHWGZLHNJZRYyAB6j5yVLMVHIHriY49d/GZTZVNB8GoJv9Gakwc/fuEZYYl4YDFiGMBP///TzlI4jhiJzjKnEvqPFki5p2ZRJqcbCiF4pJrxUQR/RXqVFQdbRLZgYfJ8xGB878RENq3yQ39d8dVOkq4edbkzwcUmwwwkYVPIoDGsYLaRHnG+To7FvMeyO7xDVQkMKzopTQV8AuKpyvpqu0a9pWOMaiCyDytO7GGN you@me.com"
+  location= "East US"
 }
 
 provider "azurerm" {
   features {}
 }
 
-resource "azurerm_resource_group" "example" {
-  name     = "example-resources"
-  location = "West Europe"
+resource "azurerm_resource_group" "Contaynement" {
+  name     = "Contaynement"
+  location = locals.location
 }
 
-resource "azurerm_virtual_network" "example" {
+resource "azurerm_virtual_network" "darknet" {
   name                = "example-network"
-  resource_group_name = azurerm_resource_group.example.name
-  location            = azurerm_resource_group.example.location
+  resource_group_name = azurerm_resource_group.Contaynement.name
+  location            = locals.location
   address_space       = ["10.0.0.0/16"]
 }
 
-resource "azurerm_subnet" "internal" {
-  name                 = "internal"
-  resource_group_name  = azurerm_resource_group.example.name
-  virtual_network_name = azurerm_virtual_network.example.name
+resource "azurerm_subnet" "sub_sandwich" {
+  name                 = "sub_sandwich"
+  resource_group_name  = azurerm_resource_group.Contaynement.name
+  virtual_network_name = azurerm_virtual_network.darknet.name
   address_prefixes     = ["10.0.2.0/24"]
 }
 
-resource "azurerm_linux_virtual_machine_scale_set" "example" {
-  name                = "example-vmss"
-  resource_group_name = azurerm_resource_group.example.name
-  location            = azurerm_resource_group.example.location
+resource "azurerm_linux_virtual_machine_scale_set" "stretch_armstrong" {
+  name                = "stretch_armstrong"
+  resource_group_name = azurerm_resource_group.Contaynement.name
+  location            = locals.location
   sku                 = "Standard_F2"
   instances           = 1
   admin_username      = "adminuser"
