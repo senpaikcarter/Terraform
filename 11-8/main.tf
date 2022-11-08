@@ -50,7 +50,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "stretch_armstrong" {
 
   admin_ssh_key {
     username   = "adminuser"
-    public_key = local.first_public_key
+    public_key = var.public_key
   }
 
   source_image_reference {
