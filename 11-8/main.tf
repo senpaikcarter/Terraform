@@ -12,7 +12,7 @@ provider "azurerm" {
 }
 
 locals {
-  first_public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC+wWK73dCr+jgQOAxNsHAnNNNMEMWOHYEccp6wJm2gotpr9katuF/ZAdou5AaW1C61slRkHRkpRRX9FA9CYBiitZgvCCz+3nWNN7l/Up54Zps/pHWGZLHNJZRYyAB6j5yVLMVHIHriY49d/GZTZVNB8GoJv9Gakwc/fuEZYYl4YDFiGMBP///TzlI4jhiJzjKnEvqPFki5p2ZRJqcbCiF4pJrxUQR/RXqVFQdbRLZgYfJ8xGB878RENq3yQ39d8dVOkq4edbkzwcUmwwwkYVPIoDGsYLaRHnG+To7FvMeyO7xDVQkMKzopTQV8AuKpyvpqu0a9pWOMaiCyDytO7GGN you@me.com"
+  first_public_key = file("~/.ssh/azurevm.pub")
   location= "East US"
 }
 
@@ -40,8 +40,8 @@ resource "azurerm_subnet" "sub_sandwich" {
   address_prefixes     = ["10.0.2.0/24"]
 }
 
-resource "azurerm_linux_virtual_machine_scale_set" "stretch_armstrong" {
-  name                = "stretch_armstrong"
+resource "azurerm_linux_virtual_machine_scale_set" "reginald" {
+  name                = "reginald"
   resource_group_name = azurerm_resource_group.Contaynement.name
   location            = local.location
   sku                 = "Standard_B2s"
@@ -74,5 +74,64 @@ resource "azurerm_linux_virtual_machine_scale_set" "stretch_armstrong" {
       primary   = true
       subnet_id = azurerm_subnet.sub_sandwich.id
     }
+  }
+}
+
+resource "azurerm_resource_group" "Dingus" {
+  name     = "Dingus"
+  location = local.location
+}
+
+resource "azurerm_virtual_network" "noirnet" {
+  name                = "noirnet"
+  resource_group_name = azurerm_resource_group.Dingus.name
+  location            = local.location
+  address_space       = ["10.0.0.0/16"]
+}
+
+resource "azurerm_subnet" "nourasubnet" {
+  name                 = "nourasubnet"
+  resource_group_name  = azurerm_resource_group.Dingus.name
+  virtual_network_name = azurerm_virtual_network.noirnet.name
+  address_prefixes     = ["10.0.2.0/24"]
+}
+
+resource "azurerm_network_interface" "NICcard" {
+  name                = "NICcard"
+  location            = local.location
+  resource_group_name = azurerm_resource_group.Dingus.name
+
+  ip_configuration {
+    name                          = "internal"
+    subnet_id                     = azurerm_subnet.nourasubnet.id
+    private_ip_address_allocation = "Dynamic"
+  }
+}
+
+resource "azurerm_linux_virtual_machine" "exceptionaldingus" {
+  name                = "exceptionaldingus"
+  resource_group_name = azurerm_resource_group.Dingus.name
+  location            = local.location
+  size                = "Standard_B2s"
+  admin_username      = "adminuser"
+  network_interface_ids = [
+    azurerm_network_interface.NICcard.id,
+  ]
+
+  admin_ssh_key {
+    username   = "adminuser"
+    public_key = file("~/.ssh/azurevm.pub")
+  }
+
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "16.04-LTS"
+    version   = "latest"
   }
 }
