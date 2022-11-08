@@ -16,9 +16,10 @@ locals {
   location= "East US"
 }
 
-provider "azurerm" {
-  features {}
-}
+#commented out because of the spanish inquistion (more like I got a duplicate provider configuration error)
+# provider "azurerm" {
+#   features {}
+# }
 
 resource "azurerm_resource_group" "Contaynement" {
   name     = "Contaynement"
