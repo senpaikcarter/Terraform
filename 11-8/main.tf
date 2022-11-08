@@ -72,7 +72,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "stretch_armstrong" {
     ip_configuration {
       name      = "internal"
       primary   = true
-      subnet_id = azurerm_subnet.internal.id
+      subnet_id = azurerm_subnet.sub_sandwich
     }
   }
 }
