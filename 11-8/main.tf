@@ -135,3 +135,8 @@ resource "azurerm_linux_virtual_machine" "exceptionaldingus" {
     version   = "latest"
   }
 }
+
+# output "VMSS-IP" {
+#   description = "this is the output for the IP address"
+#   value = azurerm_linux_virtual_machine_scale_set.reginald.ip
+# }
