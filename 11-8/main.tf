@@ -45,7 +45,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "reginald" {
   resource_group_name = azurerm_resource_group.Contaynement.name
   location            = local.location
   sku                 = "Standard_B2s"
-  instances           = 1
+  instances           = 2
   admin_username      = "adminuser"
 
   admin_ssh_key {
@@ -71,7 +71,10 @@ resource "azurerm_linux_virtual_machine_scale_set" "reginald" {
 
     ip_configuration {
       name      = "internal"
-      primary   = true
+      primary   = trueoutput "VMSS-IP" {
+#   description = "this is the output for the IP address"
+#   value = azurerm_linux_virtual_machine_scale_set.reginald.ip
+# }
       subnet_id = azurerm_subnet.sub_sandwich.id
     }
   }
