@@ -56,6 +56,18 @@ resource "azurerm_network_security_group" "Julio" {
   }
 }
 
+#Public IP Starts Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
+resource "azurerm_public_ip" "PublicIP12345" {
+  name                = "PublicIP12345"
+  resource_group_name = azurerm_resource_group.Contaynement.name
+  location            = local.location
+  allocation_method   = "Static"
+
+  tags = {
+    environment = "Production"
+  }
+}
+
 #Darknet Subnet's Start Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
 resource "azurerm_subnet" "sub_sandwich" {
   name                 = "sub_sandwich"
@@ -129,6 +141,7 @@ resource "azurerm_network_interface" "NICcard" {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.nourasubnet.id
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id = azurerm_public_ip.PublicIP12345.id
   }
 }
 
@@ -176,12 +189,17 @@ resource "azurerm_linux_virtual_machine" "exceptionaldingus" {
 #   value = azurerm_linux_virtual_machine_scale_set.reginald.ip
 # }
 
-output "VM-SSH-Key" {
-  description = "The VM Public IP is:"
-  value = azurerm_linux_virtual_machine.exceptionaldingus.admin_ssh_key
-}
+# output "VM-SSH-Key" {
+#   description = "The VM Public IP is:"
+#   value = azurerm_linux_virtual_machine.exceptionaldingus.admin_ssh_key
+# }
 
-output "VM-ID" {
-  description = "The VM ID is:"
-  value = azurerm_linux_virtual_machine_scale_set.reginald.id
+# output "VM-ID" {
+#   description = "The VM ID is:"
+#   value = azurerm_linux_virtual_machine_scale_set.reginald.id
+# }
+
+output "VM-IP" {
+  description = "The VM IP Address is:"
+  value = azurerm_linux_virtual_machine.exceptionaldingus.public_ip_address
 }
