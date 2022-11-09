@@ -147,6 +147,16 @@ resource "azurerm_linux_virtual_machine" "exceptionaldingus" {
     public_key = file("~/.ssh/azurevm.pub")
   }
 
+  #this is a test, feel free to remove me afterwards 
+  # os_profile_linux_config {
+  #   disable_password_authentication = true
+  #   ssh_keys = file("~/.ssh/azurevm.pub")
+  # }
+
+  # os_profile {
+  #   computer_name = "Ramifications"
+  # }
+
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
@@ -159,6 +169,7 @@ resource "azurerm_linux_virtual_machine" "exceptionaldingus" {
     version   = "latest"
   }
 }
+
 
 # output "VMSS-IP" {
 #   description = "this is the output for the IP address"
