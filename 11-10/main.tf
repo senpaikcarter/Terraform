@@ -119,7 +119,7 @@ resource "azurerm_network_interface" "nic" {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.nourasubnet.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.PublicIP12345variable[count.index]id
+    public_ip_address_id          = azurerm_public_ip.PublicIP12345variable[count.index].id
   }
   tags = {
     environment = "Production"
@@ -175,6 +175,12 @@ resource "azurerm_linux_virtual_machine" "vm" {
 # }
 
 # output "VM-IP" {
-#   description = "The VM IP Address is:"
-#   value       = azurerm_linux_virtual_machine.vm.public_ip_address
+#   description = "The VM's IP Addresses are:"
+#   value       = azurerm_linux_virtual_machine.vm[count.index].public_ip_address
 # }
+
+output "VM-IP" {
+  description = "The VM's IP Addresses are:"
+  value       = [for public_ip_address in azurerm_linux_virtual_machine.vm : public_ip_address.public_ip_address ]
+  sensitive = false
+}
