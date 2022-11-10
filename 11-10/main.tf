@@ -11,16 +11,19 @@ provider "azurerm" {
   features {}
 }
 
+#Locals Block Starts Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
 locals {
   first_public_key = file("~/.ssh/azurevm.pub")
   location         = "East US"
 }
 
+#Resource Group Contaynement Starts Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
 resource "azurerm_resource_group" "Contaynement" {
   name     = "Contaynement"
   location = local.location
 }
 
+#Azure Virtual Network Darknet Starts Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
 resource "azurerm_virtual_network" "darknet" {
   name                = "darknet"
   resource_group_name = azurerm_resource_group.Contaynement.name
@@ -126,6 +129,7 @@ resource "azurerm_network_interface" "nic" {
   }
 }
 
+#Azure Linux Virtual Machine Starts Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
 resource "azurerm_linux_virtual_machine" "vm" {
   count               = var.vm_count
   name                = "${var.vm_name_pfx}-${count.index}" #name constructed using count and prefix
