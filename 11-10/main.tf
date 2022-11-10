@@ -63,6 +63,19 @@ resource "azurerm_public_ip" "PublicIP12345" {
   }
 }
 
+#Public IP Starts Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
+resource "azurerm_public_ip" "PublicIP12345variable" {
+  count = var.vm_count
+  name                = "${var.vm_name_pfx}-${count.index}-public-ip"
+  resource_group_name = azurerm_resource_group.Contaynement.name
+  location            = local.location
+  allocation_method   = "Static"
+
+  tags = {
+    environment = "Production"
+  }
+}
+
 #Darknet Subnet's Start Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
 resource "azurerm_subnet" "sub_sandwich" {
   name                 = "sub_sandwich"
@@ -96,8 +109,9 @@ resource "azurerm_subnet" "nourasubnet" {
   address_prefixes     = ["10.0.2.0/24"]
 }
 #NIC Card Starts Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
-resource "azurerm_network_interface" "NICcard" {
-  name                = "NICcard"
+resource "azurerm_network_interface" "nic" {
+  count = var.vm_count
+  name                = "${var.vm_name_pfx}-${count.index}-nic"
   location            = local.location
   resource_group_name = azurerm_resource_group.Dingus.name
 
@@ -112,14 +126,15 @@ resource "azurerm_network_interface" "NICcard" {
   }
 }
 
-resource "azurerm_linux_virtual_machine" "exceptionaldingus" {
-  name                = "exceptionaldingus"
+resource "azurerm_linux_virtual_machine" "vm" {
+  count = var.vm_count
+  name                = "${var.vm_name_pfx}-${count.index}" #name constructed using count and prefix
   resource_group_name = azurerm_resource_group.Dingus.name
   location            = local.location
   size                = "Standard_B2s"
   admin_username      = "adminuser"
   network_interface_ids = [
-    azurerm_network_interface.NICcard.id,
+    azurerm_network_interface.nic[count.index].id,
   ]
 
   admin_ssh_key {
