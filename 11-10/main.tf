@@ -86,7 +86,7 @@ resource "azurerm_subnet" "sub_sandwich" {
   virtual_network_name = azurerm_virtual_network.darknet.name
   address_prefixes     = ["10.0.2.0/24"]
 }
-#Resource Group Dingus Starts Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
+#Resource Group Dingus Starts Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
 resource "azurerm_resource_group" "Dingus" {
   name     = "Dingus"
   location = local.location
