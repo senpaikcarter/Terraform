@@ -119,7 +119,7 @@ resource "azurerm_network_interface" "nic" {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.nourasubnet.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.PublicIP12345.id
+    public_ip_address_id          = azurerm_public_ip.PublicIP12345variable[count.index]id
   }
   tags = {
     environment = "Production"
@@ -127,7 +127,7 @@ resource "azurerm_network_interface" "nic" {
 }
 
 resource "azurerm_linux_virtual_machine" "vm" {
-  count = var.vm_count
+  count               = var.vm_count
   name                = "${var.vm_name_pfx}-${count.index}" #name constructed using count and prefix
   resource_group_name = azurerm_resource_group.Dingus.name
   location            = local.location
@@ -174,7 +174,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
 #   value = azurerm_linux_virtual_machine_scale_set.reginald.id
 # }
 
-output "VM-IP" {
-  description = "The VM IP Address is:"
-  value       = azurerm_linux_virtual_machine.exceptionaldingus.public_ip_address
-}
+# output "VM-IP" {
+#   description = "The VM IP Address is:"
+#   value       = azurerm_linux_virtual_machine.vm.public_ip_address
+# }
