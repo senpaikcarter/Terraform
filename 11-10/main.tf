@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     azurerm = {
-      source = "hashicorp/azurerm"
+      source  = "hashicorp/azurerm"
       version = "3.30.0"
     }
   }
@@ -13,13 +13,8 @@ provider "azurerm" {
 
 locals {
   first_public_key = file("~/.ssh/azurevm.pub")
-  location= "East US"
+  location         = "East US"
 }
-
-#commented out because of the spanish inquistion (more like I got a duplicate provider configuration error)
-# provider "azurerm" {
-#   features {}
-# }
 
 resource "azurerm_resource_group" "Contaynement" {
   name     = "Contaynement"
@@ -79,6 +74,9 @@ resource "azurerm_subnet" "sub_sandwich" {
 resource "azurerm_resource_group" "Dingus" {
   name     = "Dingus"
   location = local.location
+  tags = {
+    environment = "Production"
+  }
 }
 #Network Noirnet Starts Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
 resource "azurerm_virtual_network" "noirnet" {
@@ -86,6 +84,9 @@ resource "azurerm_virtual_network" "noirnet" {
   resource_group_name = azurerm_resource_group.Dingus.name
   location            = local.location
   address_space       = ["10.0.0.0/16"]
+  tags = {
+    environment = "Production"
+  }
 }
 #Subnet nourasubnet Starts Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
 resource "azurerm_subnet" "nourasubnet" {
@@ -104,7 +105,10 @@ resource "azurerm_network_interface" "NICcard" {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.nourasubnet.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id = azurerm_public_ip.PublicIP12345.id
+    public_ip_address_id          = azurerm_public_ip.PublicIP12345.id
+  }
+  tags = {
+    environment = "Production"
   }
 }
 
@@ -134,6 +138,9 @@ resource "azurerm_linux_virtual_machine" "exceptionaldingus" {
     sku       = "16.04-LTS"
     version   = "latest"
   }
+  tags = {
+    environment = "Production"
+  }
 }
 
 
@@ -154,5 +161,5 @@ resource "azurerm_linux_virtual_machine" "exceptionaldingus" {
 
 output "VM-IP" {
   description = "The VM IP Address is:"
-  value = azurerm_linux_virtual_machine.exceptionaldingus.public_ip_address
+  value       = azurerm_linux_virtual_machine.exceptionaldingus.public_ip_address
 }
