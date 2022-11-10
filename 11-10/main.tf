@@ -136,7 +136,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   network_interface_ids = [
     azurerm_network_interface.nic[count.index].id,
   ]
-
+  
   admin_ssh_key {
     username   = "adminuser"
     public_key = file("~/.ssh/azurevm.pub")
