@@ -17,16 +17,10 @@ locals {
   location         = "East US"
 }
 
-#Resource Group Contaynement Starts Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
-resource "azurerm_resource_group" "Contaynement" {
-  name     = "Contaynement"
-  location = local.location
-}
-
 #Azure Virtual Network Darknet Starts Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
 resource "azurerm_virtual_network" "darknet" {
   name                = "darknet"
-  resource_group_name = azurerm_resource_group.Contaynement.name
+  resource_group_name = azurerm_resource_group.Dingus.name
   location            = local.location
   address_space       = ["10.0.0.0/16"]
 }
@@ -35,7 +29,7 @@ resource "azurerm_virtual_network" "darknet" {
 resource "azurerm_network_security_group" "Julio" {
   name                = "Julio"
   location            = local.location
-  resource_group_name = azurerm_resource_group.Contaynement.name
+  resource_group_name = azurerm_resource_group.Dingus.name
 
   security_rule {
     name                       = "donttouchthat"
@@ -57,7 +51,7 @@ resource "azurerm_network_security_group" "Julio" {
 #Public IP Starts Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
 resource "azurerm_public_ip" "PublicIP12345" {
   name                = "PublicIP12345"
-  resource_group_name = azurerm_resource_group.Contaynement.name
+  resource_group_name = azurerm_resource_group.Dingus.name
   location            = local.location
   allocation_method   = "Static"
 
@@ -70,7 +64,7 @@ resource "azurerm_public_ip" "PublicIP12345" {
 resource "azurerm_public_ip" "PublicIP12345variable" {
   count = var.vm_count
   name                = "${var.vm_name_pfx}-${count.index}-public-ip"
-  resource_group_name = azurerm_resource_group.Contaynement.name
+  resource_group_name = azurerm_resource_group.Dingus.name
   location            = local.location
   allocation_method   = "Static"
 
@@ -82,7 +76,7 @@ resource "azurerm_public_ip" "PublicIP12345variable" {
 #Darknet Subnet's Start Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
 resource "azurerm_subnet" "sub_sandwich" {
   name                 = "sub_sandwich"
-  resource_group_name  = azurerm_resource_group.Contaynement.name
+  resource_group_name  = azurerm_resource_group.Dingus.name
   virtual_network_name = azurerm_virtual_network.darknet.name
   address_prefixes     = ["10.0.2.0/24"]
 }
@@ -161,27 +155,6 @@ resource "azurerm_linux_virtual_machine" "vm" {
     environment = "Production"
   }
 }
-
-
-# output "VMSS-IP" {
-#   description = "this is the output for the IP address"
-#   value = azurerm_linux_virtual_machine_scale_set.reginald.ip
-# }
-
-# output "VM-SSH-Key" {
-#   description = "The VM Public IP is:"
-#   value = azurerm_linux_virtual_machine.exceptionaldingus.admin_ssh_key
-# }
-
-# output "VM-ID" {
-#   description = "The VM ID is:"
-#   value = azurerm_linux_virtual_machine_scale_set.reginald.id
-# }
-
-# output "VM-IP" {
-#   description = "The VM's IP Addresses are:"
-#   value       = azurerm_linux_virtual_machine.vm[count.index].public_ip_address
-# }
 
 output "VM-IP" {
   description = "The VM's IP Addresses are:"
