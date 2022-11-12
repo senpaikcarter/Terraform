@@ -15,3 +15,18 @@ variable "location" {
     default = "East US"
     type = string
 }
+
+variable "first_public_key" {
+    description = "public key for reaching out to linux virtual machines"
+    default = "~/.ssh/azurevm.pub"
+    type = string
+}
+
+variable "tags" {
+    description = "tags for all resources big and small"
+    default = {
+        environment = "Production"
+        owner = "Kenny"
+    }
+    type = map 
+}

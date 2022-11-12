@@ -7,9 +7,17 @@ terraform {
   }
 }
 
-#Provider Starts Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
 provider "azurerm" {
   features {}
+}
+
+#Resource Group Starts Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
+resource "azurerm_resource_group" "Production" {
+  name     = "Production"
+  location = var.location
+  tags = {
+    environment = "Production"
+  }
 }
 
 #Locals Block Starts Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
@@ -17,3 +25,50 @@ provider "azurerm" {
 #   first_public_key = file("~/.ssh/azurevm.pub")
 #   location         = "East US"
 # }
+
+#Azure Virtual Network Darknet Starts Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
+resource "azurerm_virtual_network" "darknet" {
+  name                = "darknet"
+  resource_group_name = azurerm_resource_group.Production.name
+  location            = var.location
+  address_space       = ["10.0.0.0/16"]
+  tags = var.tags
+}
+
+#Darknet Subnet's Start Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
+resource "azurerm_subnet" "sub_sandwich" {
+  name                 = "sub_sandwich"
+  resource_group_name  = azurerm_resource_group.Production.name
+  virtual_network_name = azurerm_virtual_network.darknet.name
+  address_prefixes     = ["10.0.2.0/24"]
+}
+
+resource "azurerm_network_security_group" "Julio" {
+  name                = "Julio"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.Production.name
+  
+  security_rule {
+    name                       = "donttouchthat"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
+  tags = var.tags
+}
+
+#Public IP Starts Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
+resource "azurerm_public_ip" "PublicIPProduction" {
+  count = var.vm_count
+  name                = "${var.vm_name_pfx}-${count.index}-public-ip"
+  resource_group_name = azurerm_resource_group.Production.name
+  location            = var.location
+  allocation_method   = "Static"
+  tags = var.tags
+}
