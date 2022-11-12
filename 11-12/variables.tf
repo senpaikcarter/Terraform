@@ -1,6 +1,6 @@
 variable "vm_name_pfx" {
     description = "VM Names"
-    default = "Virtual-Machine-"
+    default = "Virtual-Machine"
     type = string 
 }
 
@@ -27,6 +27,7 @@ variable "tags" {
     default = {
         environment = "Production"
         owner = "Kenny"
+        overlord = "Kenny"
     }
     type = map 
 }

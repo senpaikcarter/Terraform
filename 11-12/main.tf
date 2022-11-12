@@ -72,3 +72,56 @@ resource "azurerm_public_ip" "PublicIPProduction" {
   allocation_method   = "Static"
   tags = var.tags
 }
+
+#NIC Card Starts Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
+resource "azurerm_network_interface" "nic" {
+  count = var.vm_count
+  name                = "${var.vm_name_pfx}-${count.index}-nic"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.Production.name
+
+  ip_configuration {
+    name                          = "internal"
+    subnet_id                     = azurerm_subnet.sub_sandwich.id
+    private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.PublicIPProduction[count.index].id
+  }
+  tags = var.tags
+}
+
+#Azure Linux Virtual Machine Starts Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
+resource "azurerm_linux_virtual_machine" "vm" {
+  count               = var.vm_count
+  name                = "${var.vm_name_pfx}-${count.index}" #name constructed using count and prefix
+  resource_group_name = azurerm_resource_group.Production.name
+  location            = var.location
+  size                = "Standard_B2s"
+  admin_username      = "adminuser"
+  network_interface_ids = [
+    azurerm_network_interface.nic[count.index].id,
+  ]
+  
+  admin_ssh_key {
+    username   = "adminuser"
+    public_key = file(var.first_public_key)
+  }
+
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "16.04-LTS"
+    version   = "latest"
+  }
+  tags = var.tags
+}
+
+output "VM-IP" {
+  description = "The VM's IP Addresses are:"
+  value       = [for public_ip_address in azurerm_linux_virtual_machine.vm : public_ip_address.public_ip_address ]
+  sensitive = false
+}
