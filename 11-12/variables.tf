@@ -9,3 +9,9 @@ variable "vm_count" {
     default = 1
     type = string
 }
+
+variable "location" {
+    description = "Location Variable for Resources"
+    default = "East US"
+    type = string
+}

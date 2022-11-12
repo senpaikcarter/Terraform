@@ -7,12 +7,13 @@ terraform {
   }
 }
 
+#Provider Starts Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
 provider "azurerm" {
   features {}
 }
 
 #Locals Block Starts Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
-locals {
-  first_public_key = file("~/.ssh/azurevm.pub")
-  location         = "East US"
-}
+# locals { #commented out for vairable.tf testing 
+#   first_public_key = file("~/.ssh/azurevm.pub")
+#   location         = "East US"
+# }
