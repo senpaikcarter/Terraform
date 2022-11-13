@@ -20,12 +20,6 @@ resource "azurerm_resource_group" "Production" {
   }
 }
 
-#Locals Block Starts Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
-# locals { #commented out for vairable.tf testing 
-#   first_public_key = file("~/.ssh/azurevm.pub")
-#   location         = "East US"
-# }
-
 #Azure Virtual Network Darknet Starts Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
 resource "azurerm_virtual_network" "darknet" {
   name                = "darknet"
@@ -98,7 +92,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   location            = var.location
   size                = "Standard_B2s"
   admin_username      = "adminuser"
-  password_authentication = false
+  # password_authentication = false
   network_interface_ids = [
     azurerm_network_interface.nic[count.index].id,
   ]
