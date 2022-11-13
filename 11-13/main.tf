@@ -121,3 +121,14 @@ output "VM-IP" {
   value       = [for public_ip_address in azurerm_linux_virtual_machine.vm : public_ip_address.public_ip_address ]
   sensitive = false
 }
+
+output "VM-IP-Splat" {
+  description = "testing with the splat operator"
+  value = azurerm_linux_virtual_machine.vm[*].public_ip_address
+}
+
+
+# output "VM-IP" {
+#   description = "The VM IP Address is:"
+#   value = azurerm_linux_virtual_machine.exceptionaldingus.public_ip_address
+# }
