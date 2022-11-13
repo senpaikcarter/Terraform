@@ -43,6 +43,7 @@ resource "azurerm_subnet" "sub_sandwich" {
   address_prefixes     = ["10.0.2.0/24"]
 }
 
+#NSG Starts Here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
 resource "azurerm_network_security_group" "Julio" {
   name                = "Julio"
   location            = var.location
@@ -97,6 +98,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   location            = var.location
   size                = "Standard_B2s"
   admin_username      = "adminuser"
+  password_authentication = false
   network_interface_ids = [
     azurerm_network_interface.nic[count.index].id,
   ]
