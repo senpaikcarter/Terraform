@@ -116,11 +116,11 @@ resource "azurerm_linux_virtual_machine" "vm" {
   tags = var.tags
 }
 
-output "VM-IP" {
-  description = "The VM's IP Addresses are:"
-  value       = [for public_ip_address in azurerm_linux_virtual_machine.vm : public_ip_address.public_ip_address ]
-  sensitive = false
-}
+# output "VM-IP" {
+#   description = "The VM's IP Addresses are:"
+#   value       = [for public_ip_address in azurerm_linux_virtual_machine.vm : public_ip_address.public_ip_address ]
+#   sensitive = false
+# }
 
 output "VM-IP-Splat" {
   description = "testing with the splat operator"
